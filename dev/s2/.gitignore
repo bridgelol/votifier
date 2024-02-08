@@ -1,0 +1,17 @@
+banned-ips.json
+banned-players.json
+
+cache/
+
+logs/
+
+permissions.yml
+
+ops.json
+usercache.json
+usernamecache.json
+version_history.json
+whitelist.json
+
+world/
+.mixin.out

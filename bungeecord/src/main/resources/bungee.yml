@@ -1,0 +1,4 @@
+name: NuVotifier
+main: com.vexsoftware.votifier.bungee.NuVotifier
+version: "${internalVersion}"
+author: Ichbinjoe, blakeman8192, Kramer, tuxed
