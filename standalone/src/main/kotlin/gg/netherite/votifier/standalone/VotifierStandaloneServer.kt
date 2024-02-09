@@ -21,14 +21,19 @@ class VotifierStandaloneServer : VotifierPlugin {
 
     @Volatile
     private var running = false
-    private var handleCount = 0
 
     fun start(config: VotifierStandaloneConfig) {
         this.running = true
         this.config = config
 
+        /**
+         * REDIS_URI="redis://:Netherite1Redis@192.168.0.1:6379/0"
+         * VOTIFIER_PORT=7084
+         */
+
         thread(start = true) {
             try {
+                VotifierStandalone.LOGGER.info("Redis URI: ${config.redisUri}")
                 this.redisForwarding = RedisForwarding(config)
                 this.bootstrap = VotifierServerBootstrap(config.host, config.port, this, false)
                 this.bootstrap.start { error: Throwable? ->
@@ -40,9 +45,7 @@ class VotifierStandaloneServer : VotifierPlugin {
                 }
 
                 while (running) {
-                    Thread.sleep(5000)
-                    VotifierStandalone.LOGGER.info { "Handled $handleCount votes in the last 5 seconds..." }
-                    handleCount = 0
+                    Thread.sleep(1000)
                 }
             } catch (e: Exception) {
                 VotifierStandalone.LOGGER.error("Error in VotifierStandaloneServer", e)
@@ -60,7 +63,6 @@ class VotifierStandaloneServer : VotifierPlugin {
         protocolVersion: VotifierSession.ProtocolVersion?,
         remoteAddress: String?
     ) {
-        handleCount++
         VotifierStandalone.LOGGER.info("Received vote from $remoteAddress: $vote")
         vote?.let { redisForwarding.forward(it) }
     }

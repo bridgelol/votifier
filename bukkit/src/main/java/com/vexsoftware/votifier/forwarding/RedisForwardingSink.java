@@ -4,9 +4,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
+import com.vexsoftware.votifier.NuVotifierBukkit;
 import com.vexsoftware.votifier.model.Vote;
 import com.vexsoftware.votifier.support.forwarding.ForwardedVoteListener;
 import com.vexsoftware.votifier.support.forwarding.ForwardingVoteSink;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.java.JavaPlugin;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
@@ -47,7 +50,10 @@ public class RedisForwardingSink extends JedisPubSub implements ForwardingVoteSi
                     r.endObject();
 
                     Vote v = new Vote(o);
-                    listener.onForward(v);
+
+                    if (Bukkit.getPlayer(v.getUsername()) != null) {
+                        listener.onForward(v);
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace(); // Should never happen.

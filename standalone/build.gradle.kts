@@ -2,6 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     kotlin("jvm") version "1.9.22"
+    kotlin("plugin.serialization") version "1.9.22"
 }
 
 applyPlatformAndCoreConfiguration()
@@ -31,6 +32,9 @@ dependencies {
     implementation(project(":nuvotifier-common"))
 
     implementation("redis.clients:jedis:5.1.0")
+
+    implementation("com.akuleshov7:ktoml-core:0.5.1")
+    implementation("com.akuleshov7:ktoml-file:0.5.1")
 }
 
 tasks.named<Jar>("jar") {
