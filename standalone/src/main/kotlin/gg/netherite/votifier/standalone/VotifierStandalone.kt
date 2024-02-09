@@ -29,7 +29,7 @@ object VotifierStandalone {
             System.getenv("VOTIFIER_HOST") ?: "0.0.0.0",
             System.getenv("VOTIFIER_PORT")?.toIntOrNull() ?: 8192,
             keyPair,
-            System.getenv("REDIS_URI") ?: "redis://localhost:6379"
+            System.getenv("REDIS_URI") ?: "redis://localhost:6379/0"
         )
 
         LOGGER.info { "Starting VotifierStandalone..." }

@@ -1,4 +1,5 @@
-# NuVotifier
+# NuVotifier+++++++
+Fork of [NuVotifier](https://github.com/NuVotifier/NuVotifier) with additional features like standalone support and redis forwarding.
 
 NuVotifier is a secure alternative to using the original Votifier project.
 NuVotifier will work in place of Votifier - any vote listener that supports
@@ -10,6 +11,7 @@ NuVotifier supports many different platforms using the same universal JAR:
 + Sponge 7
 + BungeeCord / Waterfall
 + Velocity
++ Standalone (Added by [Netherite](https://netherite.gg))
 
 NuVotifier also adds forwarding and listener test commands not present in the
 original version.

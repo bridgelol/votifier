@@ -6,7 +6,11 @@ plugins {
 
 applyPlatformAndCoreConfiguration()
 applyCommonArtifactoryConfig()
-applyShadowConfiguration()
+
+apply(plugin = "com.github.johnrengelman.shadow")
+tasks.named<ShadowJar>("shadowJar") {
+    archiveClassifier.set("dist")
+}
 
 repositories {
     maven {
@@ -35,15 +39,6 @@ tasks.named<Jar>("jar") {
     manifest {
         attributes("Implementation-Version" to projectVersion)
         attributes("Main-Class" to "gg.netherite.votifier.standalone.VotifierStandalone")
-    }
-}
-
-tasks.named<ShadowJar>("shadowJar") {
-    configurations = listOf(project.configurations["shadeOnly"], project.configurations["runtimeClasspath"])
-
-    dependencies {
-        include(dependency(":nuvotifier-api"))
-        include(dependency(":nuvotifier-common"))
     }
 }
 
