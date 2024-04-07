@@ -26,9 +26,10 @@ fun Project.applyShadowConfiguration() {
         dependencies {
             include(project(":nuvotifier-api"))
             include(project(":nuvotifier-common"))
-
-            exclude("com.google.code.findbugs:jsr305")
+            include(dependency("redis.clients:jedis"))
         }
+
+        exclude("com.google.code.findbugs:jsr305")
         exclude("GradleStart**")
         exclude(".cache")
         exclude("LICENSE*")

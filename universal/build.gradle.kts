@@ -36,6 +36,7 @@ tasks.named<ShadowJar>("shadowJar") {
         include(dependency(":nuvotifier-bukkit"))
         include(dependency(":nuvotifier-bungeecord"))
         include(dependency(":nuvotifier-velocity"))
+        include(dependency("redis.clients:jedis"))
     }
 
     exclude("GradleStart**")

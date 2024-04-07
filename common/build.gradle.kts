@@ -7,6 +7,7 @@ applyCommonArtifactoryConfig()
 
 dependencies {
     "api"(project(":nuvotifier-api"))
+    "api"("redis.clients:jedis:5.1.0")
     "implementation"("io.netty:netty-handler:${Versions.NETTYIO}")
     "implementation"("io.netty:netty-transport-native-epoll:${Versions.NETTYIO}:linux-x86_64")
     "implementation"("com.google.code.gson:gson:${Versions.GSON}")
