@@ -22,12 +22,12 @@ class VelocityScheduler implements VotifierScheduler {
     }
 
     @Override
-    public ScheduledVotifierTask delayedOnPool(Runnable runnable, int delay, TimeUnit unit) {
+    public ScheduledVotifierTask delayedOnPool(Runnable runnable, long delay, TimeUnit unit) {
         return new TaskWrapper(builder(runnable).delay(delay, unit).schedule());
     }
 
     @Override
-    public ScheduledVotifierTask repeatOnPool(Runnable runnable, int delay, int repeat, TimeUnit unit) {
+    public ScheduledVotifierTask repeatOnPool(Runnable runnable, long delay, long repeat, TimeUnit unit) {
         return new TaskWrapper(builder(runnable).delay(delay, unit).repeat(repeat, unit).schedule());
     }
 

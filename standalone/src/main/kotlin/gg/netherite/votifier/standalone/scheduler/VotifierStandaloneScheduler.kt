@@ -7,9 +7,9 @@ import kotlin.concurrent.thread
 
 object VotifierStandaloneScheduler : VotifierScheduler {
 
-    override fun delayedOnPool(runnable: Runnable?, delay: Int, unit: TimeUnit?): ScheduledVotifierTask {
+    override fun delayedOnPool(runnable: Runnable?, delay: Long, unit: TimeUnit?): ScheduledVotifierTask {
         val thread = thread(start = true) {
-            Thread.sleep(unit!!.toMillis(delay.toLong()))
+            Thread.sleep(unit!!.toMillis(delay))
             runnable?.run()
         }
 
@@ -17,11 +17,11 @@ object VotifierStandaloneScheduler : VotifierScheduler {
         return task
     }
 
-    override fun repeatOnPool(runnable: Runnable?, delay: Int, repeat: Int, unit: TimeUnit?): ScheduledVotifierTask {
+    override fun repeatOnPool(runnable: Runnable?, delay: Long, repeat: Long, unit: TimeUnit?): ScheduledVotifierTask {
         val thread = thread(start = true) {
-            repeat(repeat) {
+            repeat(repeat.toInt()) {
                 runnable?.run()
-                Thread.sleep(unit!!.toMillis(delay.toLong()))
+                Thread.sleep(unit!!.toMillis(delay))
             }
         }
 

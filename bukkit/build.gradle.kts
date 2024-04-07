@@ -20,7 +20,7 @@ configurations {
 }
 
 dependencies {
-    "compileOnly"("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
+    "compileOnly"("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
     "api"(project(":nuvotifier-api"))
     "api"(project(":nuvotifier-common"))
     implementation("redis.clients:jedis:5.1.0")

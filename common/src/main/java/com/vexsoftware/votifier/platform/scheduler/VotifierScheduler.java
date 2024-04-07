@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 public interface VotifierScheduler {
 
-    ScheduledVotifierTask delayedOnPool(Runnable runnable, int delay, TimeUnit unit);
+    ScheduledVotifierTask delayedOnPool(Runnable runnable, long delay, TimeUnit unit);
 
-    ScheduledVotifierTask repeatOnPool(Runnable runnable, int delay, int repeat, TimeUnit unit);
+    ScheduledVotifierTask repeatOnPool(Runnable runnable, long delay, long repeat, TimeUnit unit);
 }
