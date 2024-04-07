@@ -62,6 +62,19 @@ import java.util.logging.Level;
  */
 public class NuVotifierBukkit extends JavaPlugin implements VoteHandler, VotifierPlugin, ForwardedVoteListener {
 
+    private static final boolean FOLIA_SUPPORTED;
+
+    static {
+        boolean foliaSupported = false;
+        try {
+            Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
+            foliaSupported = true;
+        } catch (ClassNotFoundException e) {
+            // Ignore
+        }
+        FOLIA_SUPPORTED = foliaSupported;
+    }
+
     /**
      * The server bootstrap.
      */
@@ -85,18 +98,8 @@ public class NuVotifierBukkit extends JavaPlugin implements VoteHandler, Votifie
     private ForwardingVoteSink forwardingMethod;
     private VotifierScheduler scheduler;
     private LoggingAdapter pluginLogger;
-    private boolean isFolia;
 
     private boolean loadAndBind() {
-        try {
-            Class.forName("io.papermc.paper.threadedregions.scheduler.AsyncScheduler");
-            isFolia = true;
-
-            getLogger().info("Using Folia; VotifierEvent will be fired asynchronously.");
-        } catch (ClassNotFoundException e) {
-            isFolia = false;
-        }
-
         scheduler = new PaperScheduler(this);
         pluginLogger = new JavaUtilLogger(getLogger());
         if (!getDataFolder().exists()) {
@@ -387,16 +390,18 @@ public class NuVotifierBukkit extends JavaPlugin implements VoteHandler, Votifie
             getLogger().log(Level.SEVERE, "A vote was received, but you don't have any listeners available to listen for it.");
             getLogger().log(Level.SEVERE, "See https://github.com/NuVotifier/NuVotifier/wiki/Setup-Guide#vote-listeners for");
             getLogger().log(Level.SEVERE, "a list of listeners you can configure.");
+            return;
         }
 
-        if (!isFolia) {
-            getServer().getScheduler().runTask(
-                    this, () -> getServer().getPluginManager().callEvent(new VotifierEvent(vote))
+        if (FOLIA_SUPPORTED) {
+            getServer().getGlobalRegionScheduler().run(
+                    this, (task) -> getServer().getPluginManager().callEvent(new VotifierEvent(vote, false))
             );
-        } else {
-            getServer().getScheduler().runTaskAsynchronously(
-                    this, () -> getServer().getPluginManager().callEvent(new VotifierEvent(vote, true))
-            );
+            return;
         }
+
+        getServer().getScheduler().runTask(
+                this, () -> getServer().getPluginManager().callEvent(new VotifierEvent(vote, true))
+        );
     }
 }
