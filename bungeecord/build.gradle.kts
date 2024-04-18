@@ -5,7 +5,6 @@ plugins {
 }
 
 applyPlatformAndCoreConfiguration()
-applyCommonArtifactoryConfig()
 applyShadowConfiguration()
 
 repositories {

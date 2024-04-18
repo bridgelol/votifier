@@ -3,7 +3,6 @@ plugins {
 }
 
 applyPlatformAndCoreConfiguration()
-applyCommonArtifactoryConfig()
 
 dependencies {
     "api"(project(":nuvotifier-api"))

@@ -9,7 +9,6 @@ fun Project.applyPlatformAndCoreConfiguration(javaRelease: Int = 8) {
     applyCommonConfiguration()
     apply(plugin = "java")
     apply(plugin = "maven-publish")
-    apply(plugin = "com.jfrog.artifactory")
     applyCommonJavaConfiguration(
         sourcesJar = true,
         javaRelease = javaRelease,

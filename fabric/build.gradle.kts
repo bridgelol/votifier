@@ -7,7 +7,6 @@ plugins {
 }
 
 applyPlatformAndCoreConfiguration()
-applyCommonArtifactoryConfig()
 applyShadowConfiguration()
 
 configurations {

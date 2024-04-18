@@ -8,7 +8,6 @@ plugins {
 }
 
 applyPlatformAndCoreConfiguration()
-applyCommonArtifactoryConfig()
 applyShadowConfiguration()
 
 sponge {

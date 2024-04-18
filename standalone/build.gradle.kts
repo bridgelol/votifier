@@ -6,7 +6,6 @@ plugins {
 }
 
 applyPlatformAndCoreConfiguration()
-applyCommonArtifactoryConfig()
 
 apply(plugin = "com.github.johnrengelman.shadow")
 tasks.named<ShadowJar>("shadowJar") {
