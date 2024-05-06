@@ -30,7 +30,7 @@ dependencies {
     implementation(project(":nuvotifier-api"))
     implementation(project(":nuvotifier-common"))
 
-    implementation("redis.clients:jedis:5.1.0")
+    implementation("redis.clients:jedis:5.1.2")
 
     implementation("com.akuleshov7:ktoml-core:0.5.1")
     implementation("com.akuleshov7:ktoml-file:0.5.1")
