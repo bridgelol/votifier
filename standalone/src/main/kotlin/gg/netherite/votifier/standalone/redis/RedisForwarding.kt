@@ -6,11 +6,11 @@ import gg.netherite.votifier.standalone.VotifierStandalone
 import gg.netherite.votifier.standalone.VotifierStandaloneConfig
 import redis.clients.jedis.Jedis
 
-class RedisForwarding(config: VotifierStandaloneConfig) : ForwardingVoteSource {
+class RedisForwarding(config: VotifierStandaloneConfig) : StandaloneForwarding(config) {
 
     private val jedis = Jedis(config.redisUri)
 
-    override fun forward(vote: Vote) {
+    override fun forwardVote(vote: Vote) {
         VotifierStandalone.LOGGER.info { "Forwarding vote to Redis: ${vote.serialize()}" }
         jedis.publish("votifier", vote.serialize().toString())
     }

@@ -226,4 +226,8 @@ public class Vote {
         result = 31 * result + timeStamp.hashCode();
         return result;
     }
+
+    public Vote cloneAsBedrockPrefix(String prefix) {
+        return new Vote(serviceName, prefix + username, address, timeStamp, additionalData);
+    }
 }

@@ -10,6 +10,10 @@ port: 8192
 # using NuVotifier's proxy forwarding mechanism, enabling this option will increase your server's security.
 disable-v1-protocol: false
 
+# Process votes even if the player is offline. This is useful for servers that want to give rewards to players who are
+# offline when they vote.
+accept-offline: false
+
 # All tokens, labeled by the serviceName of each server list.
 tokens:
   # Default token for all server lists, if another isn't supplied.

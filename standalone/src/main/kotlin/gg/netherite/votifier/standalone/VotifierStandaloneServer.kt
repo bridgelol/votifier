@@ -23,25 +23,21 @@ class VotifierStandaloneServer : VotifierPlugin {
     private var running = false
 
     fun start(config: VotifierStandaloneConfig) {
+        if (running) return
+
         this.running = true
         this.config = config
-
-        /**
-         * REDIS_URI="redis://:Netherite1Redis@192.168.0.1:6379/0"
-         * VOTIFIER_PORT=7084
-         */
 
         thread(start = true) {
             try {
                 VotifierStandalone.LOGGER.info("Redis URI: ${config.redisUri}")
                 this.redisForwarding = RedisForwarding(config)
                 this.bootstrap = VotifierServerBootstrap(config.host, config.port, this, false)
-                this.bootstrap.start { error: Throwable? ->
-                    if (error != null) {
-                        VotifierStandalone.LOGGER.error("Error in VotifierServerBootstrap", error)
-                    } else {
-                        VotifierStandalone.LOGGER.info("Successfully bound to ${config.host}:${config.port}")
-                    }
+
+                this.bootstrap.start { error ->
+                    error?.let {
+                        VotifierStandalone.LOGGER.error("Error in VotifierServerBootstrap", it)
+                    } ?: VotifierStandalone.LOGGER.info("Successfully bound to ${config.host}:${config.port}")
                 }
 
                 while (running) {
@@ -63,8 +59,14 @@ class VotifierStandaloneServer : VotifierPlugin {
         protocolVersion: VotifierSession.ProtocolVersion?,
         remoteAddress: String?
     ) {
-        VotifierStandalone.LOGGER.info("Received vote from $remoteAddress: $vote")
-        vote?.let { redisForwarding.forward(it) }
+        vote?.let { validVote ->
+            VotifierStandalone.LOGGER.info("Received vote from $remoteAddress: $validVote")
+            redisForwarding.forward(validVote)
+
+            if (config.bedrockPrefix.isNotEmpty()) {
+                redisForwarding.forward(validVote.cloneAsBedrockPrefix(config.bedrockPrefix))
+            }
+        }
     }
 
     override fun getTokens(): MutableMap<String, Key> = mutableMapOf()

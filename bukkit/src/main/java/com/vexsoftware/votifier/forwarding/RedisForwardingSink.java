@@ -18,11 +18,13 @@ import java.io.IOException;
 
 public class RedisForwardingSink extends JedisPubSub implements ForwardingVoteSink {
 
+    private final boolean acceptOffline;
     private final Jedis jedis;
     private final ForwardedVoteListener listener;
     private final Thread thread;
 
-    public RedisForwardingSink(String redisUri, ForwardedVoteListener listener) {
+    public RedisForwardingSink(boolean acceptOffline, String redisUri, ForwardedVoteListener listener) {
+        this.acceptOffline = acceptOffline;
         this.jedis = new Jedis(redisUri);
         this.listener = listener;
         this.thread = new Thread(() -> jedis.subscribe(this, "votifier"));
@@ -51,7 +53,7 @@ public class RedisForwardingSink extends JedisPubSub implements ForwardingVoteSi
 
                     Vote v = new Vote(o);
 
-                    if (Bukkit.getPlayer(v.getUsername()) != null) {
+                    if (acceptOffline || Bukkit.getPlayer(v.getUsername()) != null) {
                         listener.onForward(v);
                     }
                 }
