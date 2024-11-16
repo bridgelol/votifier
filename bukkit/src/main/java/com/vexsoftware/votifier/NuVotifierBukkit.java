@@ -395,13 +395,13 @@ public class NuVotifierBukkit extends JavaPlugin implements VoteHandler, Votifie
 
         if (FOLIA_SUPPORTED) {
             getServer().getGlobalRegionScheduler().run(
-                    this, (task) -> getServer().getPluginManager().callEvent(new VotifierEvent(vote, false))
+                    this, (task) -> getServer().getPluginManager().callEvent(new VotifierEvent(vote, true))
             );
             return;
         }
 
         getServer().getScheduler().runTask(
-                this, () -> getServer().getPluginManager().callEvent(new VotifierEvent(vote, true))
+                this, () -> getServer().getPluginManager().callEvent(new VotifierEvent(vote))
         );
     }
 }
