@@ -401,7 +401,7 @@ public class NuVotifierBukkit extends JavaPlugin implements VoteHandler, Votifie
         }
 
         getServer().getScheduler().runTask(
-                this, () -> getServer().getPluginManager().callEvent(new VotifierEvent(vote, true))
+                this, () -> getServer().getPluginManager().callEvent(new VotifierEvent(vote, false))
         );
     }
 }
