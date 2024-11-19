@@ -30,7 +30,6 @@ class VotifierStandaloneServer : VotifierPlugin {
 
         thread(start = true) {
             try {
-                VotifierStandalone.LOGGER.info("Redis URI: ${config.redisUri}")
                 this.redisForwarding = RedisForwarding(config)
                 this.bootstrap = VotifierServerBootstrap(config.host, config.port, this, false)
 
@@ -55,21 +54,24 @@ class VotifierStandaloneServer : VotifierPlugin {
     }
 
     override fun onVoteReceived(
-        vote: Vote?,
-        protocolVersion: VotifierSession.ProtocolVersion?,
+        vote: Vote,
+        protocolVersion: VotifierSession.ProtocolVersion,
         remoteAddress: String?
     ) {
-        vote?.let { validVote ->
-            VotifierStandalone.LOGGER.info("Received vote from $remoteAddress: $validVote")
-            redisForwarding.forward(validVote)
+        if (config.debug) {
+            VotifierStandalone.LOGGER.info(
+                "Received vote from $remoteAddress: $vote (protocol version: ${protocolVersion.humanReadable})"
+            )
+        }
 
-            if (config.bedrockPrefix.isNotEmpty()) {
-                redisForwarding.forward(validVote.cloneAsBedrockPrefix(config.bedrockPrefix))
-            }
+        redisForwarding.forward(vote)
+
+        if (config.bedrockPrefix.isNotEmpty()) {
+            redisForwarding.forward(vote.cloneAsBedrockPrefix(config.bedrockPrefix))
         }
     }
 
-    override fun getTokens(): MutableMap<String, Key> = mutableMapOf()
+    override fun getTokens(): Map<String, Key> = config.v2Keys
     override fun getProtocolV1Key(): KeyPair = config.keyPair
     override fun getPluginLogger(): LoggingAdapter = StandaloneLoggingAdapter
     override fun getScheduler(): VotifierScheduler = VotifierStandaloneScheduler
