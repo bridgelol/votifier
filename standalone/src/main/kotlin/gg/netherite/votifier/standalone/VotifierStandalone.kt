@@ -7,7 +7,10 @@ import com.akuleshov7.ktoml.TomlOutputConfig
 import com.akuleshov7.ktoml.source.decodeFromStream
 import com.vexsoftware.votifier.net.protocol.v1crypto.RSAIO
 import com.vexsoftware.votifier.net.protocol.v1crypto.RSAKeygen
+import com.vexsoftware.votifier.util.KeyCreator
+import com.vexsoftware.votifier.util.TokenUtil
 import java.io.File
+import java.security.Key
 import java.security.KeyPair
 import kotlinx.serialization.Serializable
 import mu.KotlinLogging
@@ -71,20 +74,35 @@ object VotifierStandalone {
 data class TomlVotifierConfig(
     val host: String = "0.0.0.0",
     val port: Int = 8192,
+    val v2Keys: Map<String, String> = mapOf(
+        "default" to TokenUtil.newToken()
+    ),
     val redisUri: String = "redis://localhost:6379/0",
     val bedrockPrefix: String = "", // NOTE: Only use this if the vote site doesn't support Bedrock usernames, i.e they do not allow users to enter a * in their IGN
-    val maxVotesPerSecond: Int = 10
+    val maxVotesPerSecond: Int = 10,
+    val debug: Boolean = true
 ) {
 
     fun toConfig(keyPair: KeyPair): VotifierStandaloneConfig =
-        VotifierStandaloneConfig(host, port, keyPair, redisUri, bedrockPrefix, maxVotesPerSecond)
+        VotifierStandaloneConfig(
+            host,
+            port,
+            keyPair,
+            v2Keys.mapValues { KeyCreator.createKeyFrom(it.value) },
+            redisUri,
+            bedrockPrefix,
+            maxVotesPerSecond,
+            true
+        )
 }
 
 data class VotifierStandaloneConfig(
     val host: String,
     val port: Int,
     val keyPair: KeyPair,
+    val v2Keys: Map<String, Key>,
     val redisUri: String,
     val bedrockPrefix: String,
-    val maxVotesPerSecond: Int
+    val maxVotesPerSecond: Int,
+    val debug: Boolean
 )
