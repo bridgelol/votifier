@@ -15,8 +15,8 @@ import java.util.logging.Level;
  */
 public class BukkitPluginMessagingForwardingSink extends AbstractPluginMessagingForwardingSink implements PluginMessageListener {
 
-    public BukkitPluginMessagingForwardingSink(Plugin p, String channel, ForwardedVoteListener listener) {
-        super(listener);
+    public BukkitPluginMessagingForwardingSink(String secret, Plugin p, String channel, ForwardedVoteListener listener) {
+        super(secret, listener);
         Validate.notNull(channel, "Channel cannot be null.");
         this.channel = channel;
         Bukkit.getMessenger().registerIncomingPluginChannel(p, channel, this);

@@ -254,9 +254,10 @@ public class NuVotifierBukkit extends JavaPlugin implements VoteHandler, Votifie
             if ("none".equals(method)) {
                 getLogger().info("Method none selected for vote forwarding: Votes will not be received from a forwarder.");
             } else if ("pluginmessaging".equals(method)) {
+                String secret = forwardingConfig.getString("pluginMessaging.secret", TokenUtil.newToken());
                 String channel = forwardingConfig.getString("pluginMessaging.channel", "NuVotifier");
                 try {
-                    forwardingMethod = new BukkitPluginMessagingForwardingSink(this, channel, this);
+                    forwardingMethod = new BukkitPluginMessagingForwardingSink(secret, this, channel, this);
                     getLogger().info("Receiving votes over PluginMessaging channel '" + channel + "'.");
                 } catch (RuntimeException e) {
                     getLogger().log(Level.SEVERE, "NuVotifier could not set up PluginMessaging for vote forwarding!", e);

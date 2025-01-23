@@ -1,9 +1,9 @@
 package com.vexsoftware.votifier.support.forwarding;
 
 import com.vexsoftware.votifier.model.Vote;
+import com.vexsoftware.votifier.util.TokenUtil;
 import org.junit.jupiter.api.Test;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,23 +22,16 @@ public class PMForwardingSinkTest {
                 new Vote("serviceB", "usernameBBBBBBB", "1.2.23.4", "1514764800")
         ));
 
-        StringBuilder message = new StringBuilder();
+        String secret = TokenUtil.newToken();
 
-        for (Vote v : sentVotes) {
-            message.append(v.serialize());
-        }
-
-        byte[] messageBytes = message.toString().getBytes(StandardCharsets.UTF_8);
-        System.out.println(message.toString());
-
-        AbstractPluginMessagingForwardingSink sink = new AbstractPluginMessagingForwardingSink(vl) {
+        AbstractPluginMessagingForwardingSink sink = new AbstractPluginMessagingForwardingSink(secret, vl) {
             @Override
             public void halt() {
 
             }
         };
 
-        sink.handlePluginMessage(messageBytes);
+        sink.handlePluginMessage(ProtectedVoteSerializer.serializeVotes(secret, sentVotes.toArray(new Vote[0])));
 
         assertEquals(sentVotes.size(), receivedVotes.size());
 
