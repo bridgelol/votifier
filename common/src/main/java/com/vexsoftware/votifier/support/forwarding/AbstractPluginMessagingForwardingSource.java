@@ -16,16 +16,17 @@ import java.util.function.Consumer;
 
 public abstract class AbstractPluginMessagingForwardingSource implements ForwardingVoteSource {
 
-    public AbstractPluginMessagingForwardingSource(String channel, ServerFilter serverFilter, ProxyVotifierPlugin plugin, VoteCache cache, int dumpRate) {
+    public AbstractPluginMessagingForwardingSource(String channel, ServerFilter serverFilter, ProxyVotifierPlugin plugin, VoteCache cache, int dumpRate, String secret) {
         this.channel = channel;
         this.plugin = plugin;
         this.cache = cache;
         this.serverFilter = serverFilter;
         this.dumpRate = dumpRate;
+        this.secret = secret;
     }
 
-    protected AbstractPluginMessagingForwardingSource(String channel, ProxyVotifierPlugin plugin, VoteCache voteCache, int dumpRate) {
-        this(channel, null, plugin, voteCache, dumpRate);
+    protected AbstractPluginMessagingForwardingSource(String channel, ProxyVotifierPlugin plugin, VoteCache voteCache, int dumpRate, String secret) {
+        this(channel, null, plugin, voteCache, dumpRate, secret);
     }
 
     protected final ProxyVotifierPlugin plugin;
@@ -33,32 +34,48 @@ public abstract class AbstractPluginMessagingForwardingSource implements Forward
     protected final VoteCache cache;
     protected final ServerFilter serverFilter;
     private final int dumpRate;
+    private final String secret;
 
     @Override
     public void forward(Vote v) {
-        byte[] rawData = v.serialize().toString().getBytes(StandardCharsets.UTF_8);
         for (BackendServer server : plugin.getAllBackendServers()) {
             if (!serverFilter.isAllowed(server.getName())) continue;
-            if (!forwardSpecific(server, rawData)) {
-                attemptToAddToCache(v, server.getName());
-            } else if (plugin.isDebug()) {
-                plugin.getPluginLogger().info("Successfully forwarded vote " + v + " to server " + server.getName());
+
+            try {
+                if (!forwardSpecific(server, ProtectedVoteSerializer.serializeVotes(secret, v))) {
+                    attemptToAddToCache(v, server.getName());
+                } else if (plugin.isDebug()) {
+                    plugin.getPluginLogger().info("Successfully forwarded vote " + v + " to server " + server.getName());
+                }
+            } catch (IOException e) {
+                plugin.getPluginLogger().error("Wasn't able to forward vote for some reason", e);
             }
         }
     }
 
     protected boolean forwardSpecific(BackendServer connection, Vote vote) {
-        byte[] rawData = vote.serialize().toString().getBytes(StandardCharsets.UTF_8);
-        return forwardSpecific(connection, rawData);
+        boolean forwarded = false;
+        try {
+            forwarded = forwardSpecific(connection, ProtectedVoteSerializer.serializeVotes(secret, vote));
+        } catch (IOException e) {
+            plugin.getPluginLogger().error("Wasn't able to forward vote for some reason", e);
+        }
+
+        return forwarded;
     }
 
     protected boolean forwardSpecific(BackendServer connection, Collection<Vote> votes) {
-        StringBuilder data = new StringBuilder();
-        for (Vote v : votes) {
-            data.append(v.serialize().toString());
+        boolean forwarded = false;
+        try {
+            forwarded = forwardSpecific(
+                    connection,
+                    ProtectedVoteSerializer.serializeVotes(secret, votes.toArray(new Vote[0]))
+            );
+        } catch (IOException e) {
+            plugin.getPluginLogger().error("Wasn't able to forward vote for some reason", e);
         }
 
-        return forwardSpecific(connection, data.toString().getBytes(StandardCharsets.UTF_8));
+        return forwarded;
     }
 
     private boolean forwardSpecific(BackendServer connection, byte[] data) {

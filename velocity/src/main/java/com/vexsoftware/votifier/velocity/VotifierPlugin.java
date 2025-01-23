@@ -133,6 +133,7 @@ public class VotifierPlugin implements VoteHandler, ProxyVotifierPlugin {
             getLogger().info("Method none selected for vote forwarding: Votes will not be forwarded to backend servers.");
         } else if ("pluginmessaging".equals(fwdMethod)) {
             Toml pmCfg = fwdCfg.getTable("pluginMessaging");
+            String secret = pmCfg.getString("secret", TokenUtil.newToken());
             String channel = pmCfg.getString("channel", "NuVotifier");
             String cacheMethod = pmCfg.getString("cache", "file").toLowerCase();
             VoteCache voteCache = null;
@@ -162,7 +163,7 @@ public class VotifierPlugin implements VoteHandler, ProxyVotifierPlugin {
 
             if (!pmCfg.getBoolean("onlySendToJoinedServer")) {
                 try {
-                    forwardingMethod = new PluginMessagingForwardingSource(channel, filter, this, voteCache, dumpRate);
+                    forwardingMethod = new PluginMessagingForwardingSource(channel, filter, this, voteCache, dumpRate, secret);
                     getLogger().info("Forwarding votes over PluginMessaging channel '" + channel + "' for vote forwarding!");
                 } catch (RuntimeException e) {
                     getLogger().error("NuVotifier could not set up PluginMessaging for vote forwarding!", e);
@@ -171,7 +172,7 @@ public class VotifierPlugin implements VoteHandler, ProxyVotifierPlugin {
                 try {
                     String fallbackServer = pmCfg.getString("joinedServerFallback", null);
                     if (fallbackServer != null && fallbackServer.isEmpty()) fallbackServer = null;
-                    forwardingMethod = new OnlineForwardPluginMessagingForwardingSource(channel, filter, this, voteCache, fallbackServer, dumpRate);
+                    forwardingMethod = new OnlineForwardPluginMessagingForwardingSource(channel, filter, this, voteCache, fallbackServer, dumpRate, secret);
                     getLogger().info("Forwarding votes over PluginMessaging channel '" + channel + "' for vote forwarding for online players!");
                 } catch (RuntimeException e) {
                     getLogger().error("NuVotifier could not set up PluginMessaging for vote forwarding!", e);

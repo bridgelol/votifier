@@ -28,5 +28,6 @@ forwarding:
   method: none
   pluginMessaging:
     channel: nuvotifier:votes
+    secret: examplesecret
   redis:
     uri: "redis://localhost:6739/0"

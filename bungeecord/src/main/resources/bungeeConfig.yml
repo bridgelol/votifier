@@ -23,6 +23,7 @@ forwarding:
   method: none
   pluginMessaging:
     channel: nuvotifier:votes
+    secret: examplesecret
 
     #Only send votes to certain servers. If a server is present on excludedServers, then votes will NOT be forwarded
     #to them. If excludedServers is not present, votes will be sent to all servers.
@@ -43,6 +44,7 @@ forwarding:
     cache: file
     # Only sends the vote to the server in which the player is currently joined.
     onlySendToJoinedServer: false
+
     #Sets which server to send the vote in the event the player is not online when the vote is cast
     #If you do not want the vote forwarded to a fallback, set this value to empty ('')
     #ONLY USED IF onlySendToJoinedServer is true!!
