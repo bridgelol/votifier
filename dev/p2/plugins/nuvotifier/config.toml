@@ -22,10 +22,10 @@ default = "proxy2token"
 # - pluginMessaging - Sets up plugin messaging.
 # - proxy - Proxies votes to other NuVotifier servers from this server.
 method = "pluginMessaging"
-secret = "examplesecret"
 
 [forwarding.pluginMessaging]
 channel = "nuvotifier:votes"
+secret = "examplesecret"
 
 # Only send votes to certain servers. If a server is present on excludedServers, then votes will NOT be forwarded
 # to them. If excludedServers is not present, votes will be sent to all servers.
