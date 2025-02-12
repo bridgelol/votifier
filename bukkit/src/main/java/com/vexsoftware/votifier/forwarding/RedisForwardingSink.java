@@ -39,7 +39,7 @@ public class RedisForwardingSink extends JedisPubSub implements ForwardingVoteSi
                 JsonReader r = new JsonReader(reader);
                 r.setLenient(true);
                 while (r.peek() != JsonToken.END_DOCUMENT) {
-                    r.beginObject();
+                    r.beginObject();d
                     JsonObject o = new JsonObject();
 
                     while (r.hasNext()) {
