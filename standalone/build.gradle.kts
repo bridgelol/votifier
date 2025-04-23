@@ -1,8 +1,8 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    kotlin("jvm") version "1.9.22"
-    kotlin("plugin.serialization") version "1.9.22"
+    kotlin("jvm") version "2.1.20"
+    kotlin("plugin.serialization") version "2.1.20"
 }
 
 applyPlatformAndCoreConfiguration()
@@ -11,6 +11,17 @@ apply(plugin = "com.github.johnrengelman.shadow")
 tasks.named<ShadowJar>("shadowJar") {
     archiveClassifier.set("dist")
 }
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
+}
+
+kotlin {
+    jvmToolchain(17)
+}
+
 
 repositories {
     mavenCentral()
@@ -25,11 +36,11 @@ configurations {
 }
 
 dependencies {
-    // Kotlin Coroutines
-    implementation(platform("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.8.0"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+    // Kotlinx Datetime
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
+
+    // Kotlinx Serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
 
     // Logging
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
@@ -40,7 +51,7 @@ dependencies {
     implementation(project(":nuvotifier-common"))
 
     // Redis
-    implementation("redis.clients:jedis:5.1.2")
+    implementation("redis.clients:jedis:5.2.0")
 
     // TOML Configuration
     implementation("com.akuleshov7:ktoml-core:0.5.1")

@@ -265,7 +265,7 @@ public class NuVotifierBukkit extends JavaPlugin implements VoteHandler, Votifie
             } else if ("redis".equals(method)) {
                 String uri = forwardingConfig.getString("redis.uri", "redis://localhost:6379");
                 try {
-                    forwardingMethod = new RedisForwardingSink(cfg.getBoolean("accept-offline", false), uri, this);
+                    forwardingMethod = new RedisForwardingSink(this, cfg.getBoolean("accept-offline", false), uri, this);
                     getLogger().info("Receiving votes over Redis at URI '" + uri + "'.");
                 } catch (RuntimeException e) {
                     getLogger().log(Level.SEVERE, "NuVotifier could not set up Redis for vote forwarding!", e);

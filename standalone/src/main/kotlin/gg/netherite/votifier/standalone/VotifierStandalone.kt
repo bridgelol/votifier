@@ -80,6 +80,9 @@ data class TomlVotifierConfig(
     val redisUri: String = "redis://localhost:6379/0",
     val bedrockPrefix: String = "", // NOTE: Only use this if the vote site doesn't support Bedrock usernames, i.e they do not allow users to enter a * in their IGN
     val maxVotesPerSecond: Int = 10,
+    val forwardVotesEvenIfOffline: Boolean = true,
+    val cacheOfflineVotes: Boolean = true,
+    val cacheOfflineVotesSeconds: Long = 60,
     val debug: Boolean = true
 ) {
 
@@ -92,6 +95,9 @@ data class TomlVotifierConfig(
             redisUri,
             bedrockPrefix,
             maxVotesPerSecond,
+            forwardVotesEvenIfOffline,
+            cacheOfflineVotes,
+            cacheOfflineVotesSeconds,
             true
         )
 }
@@ -104,5 +110,8 @@ data class VotifierStandaloneConfig(
     val redisUri: String,
     val bedrockPrefix: String,
     val maxVotesPerSecond: Int,
+    val forwardVotesEvenIfOffline: Boolean,
+    val cacheOfflineVotes: Boolean,
+    val cacheOfflineVotesSeconds: Long,
     val debug: Boolean
 )

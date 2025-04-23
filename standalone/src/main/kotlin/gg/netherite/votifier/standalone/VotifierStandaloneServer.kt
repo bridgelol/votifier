@@ -20,7 +20,7 @@ class VotifierStandaloneServer : VotifierPlugin {
     private lateinit var bootstrap: VotifierServerBootstrap
 
     @Volatile
-    private var running = false
+    var running = false
 
     fun start(config: VotifierStandaloneConfig) {
         if (running) return
@@ -30,7 +30,7 @@ class VotifierStandaloneServer : VotifierPlugin {
 
         thread(start = true) {
             try {
-                this.redisForwarding = RedisForwarding(config)
+                this.redisForwarding = RedisForwarding(this, config)
                 this.bootstrap = VotifierServerBootstrap(config.host, config.port, this, false)
 
                 this.bootstrap.start { error ->
