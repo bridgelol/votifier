@@ -7,11 +7,11 @@ Votifier will also support NuVotifier.
 
 NuVotifier supports many different platforms using the same universal JAR:
 
-+ Bukkit / Spigot / Paper >=1.7.10
++ Bukkit / Spigot / Paper >=1.20
 + Sponge 7
 + BungeeCord / Waterfall
 + Velocity
-+ Standalone (Added by [Netherite](https://netherite.gg))
++ Standalone (Added by [Netherite](https://netherite.gg)), requires [Redis](https://redis.io)
 
 NuVotifier also adds forwarding and listener test commands not present in the
 original version.
