@@ -62,7 +62,7 @@ import java.util.logging.Level;
  */
 public class NuVotifierBukkit extends JavaPlugin implements VoteHandler, VotifierPlugin, ForwardedVoteListener {
 
-    private static final boolean FOLIA_SUPPORTED;
+    public static final boolean FOLIA_SUPPORTED;
 
     static {
         boolean foliaSupported = false;
@@ -118,7 +118,7 @@ public class NuVotifierBukkit extends JavaPlugin implements VoteHandler, Votifie
          * assigned to the server.
          */
         String hostAddr = Bukkit.getServer().getIp();
-        if (hostAddr == null || hostAddr.length() == 0)
+        if (hostAddr.isEmpty())
             hostAddr = "0.0.0.0";
 
         /*

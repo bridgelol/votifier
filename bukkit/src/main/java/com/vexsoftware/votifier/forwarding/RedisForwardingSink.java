@@ -22,6 +22,8 @@ import java.io.CharArrayReader;
 import java.io.IOException;
 import java.util.Locale;
 
+import static com.vexsoftware.votifier.NuVotifierBukkit.FOLIA_SUPPORTED;
+
 public class RedisForwardingSink extends JedisPubSub implements ForwardingVoteSink, Listener {
 
     private final NuVotifierBukkit votifier;
@@ -54,7 +56,15 @@ public class RedisForwardingSink extends JedisPubSub implements ForwardingVoteSi
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        Bukkit.getScheduler().runTaskAsynchronously(
+        if (FOLIA_SUPPORTED) {
+            Bukkit.getGlobalRegionScheduler().execute(
+                    votifier,
+                    () -> jedis.srem(RedisConstants.ONLINE_PLAYERS_KEY, event.getPlayer().getName().toLowerCase(Locale.ROOT))
+            );
+            return;
+        }
+
+        Bukkit.getScheduler().runTask(
                 votifier,
                 () -> jedis.srem(RedisConstants.ONLINE_PLAYERS_KEY, event.getPlayer().getName().toLowerCase(Locale.ROOT))
         );
