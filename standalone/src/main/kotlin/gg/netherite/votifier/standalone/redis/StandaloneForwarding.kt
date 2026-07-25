@@ -45,6 +45,11 @@ abstract class StandaloneForwarding(
                 }
             } catch (e: InterruptedException) {
                 break
+            } catch (e: Exception) {
+                // A Redis outage must not kill the cache thread: without this the first failed
+                // pass ends the loop for the lifetime of the process, silently dropping every
+                // offline vote from then on.
+                VotifierStandalone.LOGGER.error(e) { "Failed to flush cached offline votes, retrying next pass" }
             }
         }
     }
